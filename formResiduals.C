@@ -124,7 +124,8 @@ void averageDMResiduals(pulsar *psr, int npsr){
 		  {
 		    resid  -= psr[0].obsn[o].TNRedSignal;
 		  }
-		
+
+	
 		if (psr[0].TNsubtractDM ==1)
 		  {
 		    resid -= psr[0].obsn[o].TNDMSignal;
@@ -475,7 +476,7 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
             fct = psr[p].obsn[i].bbat-(int)psr[p].obsn[i].bbat - (psr[p].param[param_pepoch].val[0] - 
                     (int)psr[p].param[param_pepoch].val[0]);	   
             ftpd = fct+torb/86400.0;	   
-            psr[p].obsn[i].pet = psr[p].obsn[i].bbat - torb/SECDAY;
+            psr[p].obsn[i].pet = psr[p].obsn[i].bbat + torb/SECDAY; // https://lists.pulsarastronomy.net/pipermail/tempo2_lists.pulsarastronomy.net/2015-July/000240.html
 
             /* What is the extra -ntpd*(int)(psr.f0) term on the end??? */
             /* The extra (not included integral parts (int)f0.(int)bat) are not necessary! */
@@ -2321,7 +2322,7 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
 
 
 
-        if ((psr[p].TNsubtractDM ==1) || ( psr[p].TNsubtractRed ==1) || (psr[p].TNsubtractChrom ==1))
+        if ((psr[p].TNsubtractDM ==1) || ( psr[p].TNsubtractRed >= 1) || (psr[p].TNsubtractChrom ==1))
         {
             for(i=0;i<=psr[p].nobs; i++)
             {
@@ -2331,7 +2332,13 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
                 {
                     psr[p].obsn[i].residualtn-=psr[p].obsn[i].TNRedSignal;
                 }
-
+                if (psr[0].TNsubtractRed == 2)
+                {
+                    double resid = psr[0].obsn[i].TNRedSignal;
+                    printf("[!!!] Setting resid to %lf\n", resid);
+                    psr[p].obsn[i].residual = psr[p].obsn[i].TNRedSignal;
+                }
+	
                 if (psr[p].TNsubtractDM ==1)
                 {
                     psr[p].obsn[i].residualtn-=psr[p].obsn[i].TNDMSignal;

@@ -1127,45 +1127,48 @@ void textOutput(pulsar *psr,int npsr,double globalParameter,int nGlobal,int outR
             else
                 logwarn("UNITS was not set in the parameter file: using TCB (tempo2)");
         }
-
+        printf("%d\n", psr[0].globalNfit);
         // Write out covariance matrix for global parameters
-        if (p==0 && psr[0].globalNfit > 0)
+        if(0)
         {
-            FILE *fout = fopen("global_covar.cvm","w");
-            if (!fout){
-                logwarn("Unable to open global_covar.cvm for writing");
-            }
-            else
+            if (p==0 && psr[0].globalNfit > 0)
             {
-                int ii,jj;
-                for (ii=0;ii<psr[0].globalNfit;ii++)
+                FILE *fout = fopen("global_covar.cvm","w");
+                if (!fout){
+                    logwarn("Unable to open global_covar.cvm for writing");
+                }
+                else
                 {
+                    int ii,jj;
+                    for (ii=0;ii<psr[0].globalNfit;ii++)
+                    {
+                        for (jj=0;jj<psr[0].globalNfit;jj++)
+                        {
+                            if (psr[0].covar[ii][ii] == 0 || psr[0].covar[jj][jj] == 0)
+                            {
+                                printf("Diagonal element of covariance matrix = 0\n");
+                                fprintf(fout,"%d %d nan\n",ii,jj);
+                            }
+                            else
+                                fprintf(fout,"%d %d %g\n",ii,jj,psr[0].covar[ii][jj]/sqrt(psr[0].covar[ii][ii]*psr[0].covar[jj][jj]));
+                        }
+                        fprintf(fout,"\n");
+                    }
                     for (jj=0;jj<psr[0].globalNfit;jj++)
                     {
-                        if (psr[0].covar[ii][ii] == 0 || psr[0].covar[jj][jj] == 0)
-                        {
-                            printf("Diagonal element of covariance matrix = 0\n");
-                            fprintf(fout,"%d %d nan\n",ii,jj);
+                        fprintf(fout,"# %d %d %d %s",jj,psr[0].fitinfo.output.indexParam[jj] ,
+                                psr[0].fitinfo.output.indexCounter[jj] ,
+                                label_str[psr[0].fitinfo.output.indexParam[jj]]);
+                        if(psr[0].fitinfo.output.indexPsr[jj] == -1){
+                            fprintf(fout," GLOBAL");
+                        } else {
+                            fprintf(fout," %s",psr[psr[0].fitinfo.output.indexPsr[jj]].name);
                         }
-                        else
-                            fprintf(fout,"%d %d %g\n",ii,jj,psr[0].covar[ii][jj]/sqrt(psr[0].covar[ii][ii]*psr[0].covar[jj][jj]));
+                        fprintf(fout,"\n");
                     }
-                    fprintf(fout,"\n");
-                }
-                for (jj=0;jj<psr[0].globalNfit;jj++)
-                {
-                    fprintf(fout,"# %d %d %d %s",jj,psr[0].fitinfo.output.indexParam[jj] ,
-                            psr[0].fitinfo.output.indexCounter[jj] ,
-                            label_str[psr[0].fitinfo.output.indexParam[jj]]);
-                    if(psr[0].fitinfo.output.indexPsr[jj] == -1){
-                        fprintf(fout," GLOBAL");
-                    } else {
-                        fprintf(fout," %s",psr[psr[0].fitinfo.output.indexPsr[jj]].name);
-                    }
-                    fprintf(fout,"\n");
-                }
 
-                fclose(fout);
+                    fclose(fout);
+                }
             }
         }
 

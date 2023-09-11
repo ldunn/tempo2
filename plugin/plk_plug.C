@@ -1591,6 +1591,21 @@ void doPlot(pulsar *psr,int npsr,char *gr,double unitFlag, char parFile[][MAX_FI
 		}
 
             }
+            else if (key=='T'){
+                if(psr[0].TNsubtractRed != 2)
+                {
+                    printf("Showing TN signal as residuals");
+                    psr[0].TNsubtractRed = 2;
+                    formResiduals(psr, npsr, 1);
+                    textOutput(psr, npsr, 0, 0, 0, 0, "");
+                }
+                else
+                {
+                    psr[0].TNsubtractRed = 0;
+                    formResiduals(psr, npsr, 1);
+                    textOutput(psr, npsr, 0, 0, 0, 0, "");
+                }
+            }
             else if(key=='K'){
                 printf("youve presssed K!!!\n");
                 if(psr[0].TNsubtractRed==0){
