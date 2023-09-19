@@ -2013,7 +2013,7 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
 
 
 
-            phase5[i] = phase2+phase3+phase4+phaseJ+phaseW+phase2state + phaseShape;
+            phase5[i] = phase2+phase3+phase4+psr[p].obsn[i].phaseJ+phaseW+phase2state + phaseShape;
             //	   printf("Point 1: %.5f %.5f %.5f %.5f %.5f %.5f\n",(double)phase5[i],(double)phase2,(double)phase3,(double)phase4,(double)phaseJ,(double)phaseW);
             if (psr[p].obsn[i].nFlags>0) /* Look for extra factor to add to residuals */
             {
