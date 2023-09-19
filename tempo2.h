@@ -409,6 +409,7 @@ typedef struct observation {
     longdouble batCorr;
     longdouble bbat;                /*!< Arrival time at binary barycentre                          */
     longdouble pet;                 /*!< Pulsar emission time                                       */
+    longdouble phaseJ;
     int clockCorr;                  /*!< = 1 for clock corrections to be applied, = 0 for BAT       */
     int delayCorr;                  /*!< = 1 for time delay corrections to be applied, = 0 for BAT  */
     int deleted;                    /*!< = 1 if observation has been deleted, = -1 if not included in fit*/

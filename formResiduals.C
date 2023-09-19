@@ -682,12 +682,13 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
             } 
             /* Add in extra phase due to jumps */
             phaseJ = 0.0;
+            psr[p].obsn[i].phaseJ = 0.0;
             for (k=1;k<=psr[p].nJumps;k++)	    
             {
                 for (l=0;l<psr[p].obsn[i].obsNjump;l++)
                 {		
                     if (psr[p].obsn[i].jump[l]==k && psr[p].jumpSAT[l]==0)
-                        phaseJ+=psr[p].jumpVal[k]*psr[p].param[param_f].val[0];
+                        psr[p].obsn[i].phaseJ+=psr[p].jumpVal[k]*psr[p].param[param_f].val[0];
                 }
             }
     
@@ -703,7 +704,7 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
                         //fprintf(stderr, "%d %d %.5le  %.5le  %.5le\n",idx,k, psr[p].fdjumpVal[k],pow(psr[p].obsn[i].freqSSB/1e9,idx),psr[p].param[param_f].val[0]);
                         //phaseJ-=psr[p].fdjumpVal[k]*pow(log( psr[p].obsn[i].freqSSB/1e9),idx)*psr[p].param[param_f].val[0];
                    
-                        phaseJ-=psr[p].fdjumpVal[k]*pow( psr[p].obsn[i].freqSSB/1e9,idx)*psr[p].param[param_f].val[0];
+                        psr[p].obsn[i].phaseJ-=psr[p].fdjumpVal[k]*pow( psr[p].obsn[i].freqSSB/1e9,idx)*psr[p].param[param_f].val[0];
                     }
                 }
             }
@@ -2026,12 +2027,14 @@ void formResiduals(pulsar *psr,int npsr,int removeMean)
                         extra = parse_longdouble(psr[p].obsn[i].flagVal[k]);
                         /* psr[p].obsn[i].residual+=extra; */
                         phase5[i]+=(extra*psr[p].param[param_f].val[0]);
+                        psr[p].obsn[i].phaseJ += extra;
                     }
                     if (strcmp(psr[p].obsn[i].flagID[k],"-padd")==0) // Add in extra phase
                     {
                         extra = parse_longdouble(psr[p].obsn[i].flagVal[k]);
                         /* psr[p].obsn[i].residual+=extra; */
                         phase5[i]+=(extra);
+                        psr[p].obsn[i].phaseJ += extra;
                     }
                 }
             }

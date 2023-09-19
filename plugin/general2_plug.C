@@ -646,6 +646,14 @@ void parseLine(pulsar *psr,char *line,double *errMult,char *null,char *format,ch
                             pos+=strlen(disp);			
                         }
 
+                        else if (strcasecmp(var,"phaseJ")==0) /* Pulse number */
+                        {
+                            ld_sprintf(disp,"%.0Lf",psr[0].obsn[varN].phaseJ); 
+                            fprintf(fout,"%s",disp);
+                            pos+=strlen(disp);			
+                        }
+
+
                         else if (strcasecmp(var,"clock_corr")==0)
                         {
                             sprintf(disp,dformat,getCorrectionTT(psr[0].obsn+varN));
